@@ -1,6 +1,8 @@
 const express = require("express");
 const db = require("../config/dbConn");
 const router = express.Router()
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/ENV");
 
 router.post("/signup", (req, res) => {
     if (!req.body) return res.status(400).json({ message: "request must have user details" });
@@ -41,6 +43,37 @@ router.get("/", (req, res) => {
             res.status(500).json({
                 message: err.message
             })
+        }
+    })
+})
+
+router.post("/login", (req, res) => {
+    let user = req.body;
+    let query = "select * from user where email=?"
+    db.conn.query(query, [user.email], (err, response) => {
+        console.log(response);
+        if (!err) {
+            if (!response[0]) {
+                return res.status(400).json({
+                    message: "user not found"
+                })
+            } else if (response[0].status == "false") {
+                return res.status(401).json({
+                    message: "wait for admin permission."
+                })
+            } else if (response[0].password == user.password) {
+                let content = { email: user.email, role: response[0].role, status: response[0].status }
+                token = jwt.sign(content, JWT_SECRET, { expiresIn: "8h" })
+                return res.status(200).json({
+                    token
+                })
+            } else {
+                return res.status(500).json({
+                    message: "Something went wrong."
+                })
+            }
+        } else {
+            return res.status(500).json({ message: err.message })
         }
     })
 })

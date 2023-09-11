@@ -6,28 +6,10 @@ const { JWT_SECRET } = require("../config/ENV");
 const userCtrl = require("../controllers/user.ctrl");
 
 router.post("/signup", userCtrl.signup)
-
 router.post("/login", userCtrl.login)
 router.post("/forgotPassword", userCtrl.forgotPassword)
-
-// testing routes
-
-// get all users
-router.get("/", (req, res) => {
-    const query = "SELECT * FROM user"
-    db.conn.query(query, [], (err, results) => {
-        if (!err) {
-            res.status(200).json({
-                message: "got all users",
-                payload: results
-            })
-        } else {
-            res.status(500).json({
-                message: err.message
-            })
-        }
-    })
-})
+router.get("/getAllUsers", userCtrl.getAllUsers);
+router.patch("/updateStatus", userCtrl.updateStatus);
 
 let userRouter = router
 module.exports = userRouter

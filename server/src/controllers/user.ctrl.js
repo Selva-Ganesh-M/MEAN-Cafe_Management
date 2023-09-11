@@ -96,7 +96,55 @@ const forgotPassword = (req, res)=>{
     })
 }
 
+let getAllUsers = (req, res) => {
+    const query = "SELECT * FROM user where role='user'"
+    db.conn.query(query, [], (err, results) => {
+        if (!err) {
+            res.status(200).json({
+                message: "got all users",
+                payload: results
+            })
+        } else {
+            res.status(500).json({
+                message: err.message
+            })
+        }
+    })
+}
+
+let updateStatus = (req, res)=>{
+    let query = "UPDATE user SET status=? where id=?";
+    db.conn.query(query, [req.body.status, req.body.id], (err, result)=>{
+        if (err){
+            // error
+            return res.status(500).json({message: error.message});
+        }else{
+            // no error
+            if(result.affectedRows==0){
+                return res.status(400).json({
+                    message: "userid doesn't exist."
+                })
+            }else{
+                return res.status(200).json({
+                    message: "user updated successfully."
+                });
+            }
+        }
+    })
+}
+
+let checkToken = (req, res)=>{
+    return res.status(200).json({
+        message: "True",
+    })
+}
+
 let userCtrl = {
-    signup, login, forgotPassword
+    signup,
+    login,
+    forgotPassword,
+    getAllUsers,
+    updateStatus,
+    checkToken
 }
 module.exports = userCtrl;

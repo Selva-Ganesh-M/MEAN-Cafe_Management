@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/ENV");
 const userCtrl = require("../controllers/user.ctrl");
 
-router.post("/signup", userCtrl.singup)
+router.post("/signup", userCtrl.signup)
 
 router.post("/login", userCtrl.login)
 

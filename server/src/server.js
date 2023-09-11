@@ -11,7 +11,13 @@ server.use(express.json())
 server.use(cors())
 
 // #region : routers
+server.use((req, res, next)=>{
+    console.log(`${req.method} ${req.path}`);
+    next()
+})
 server.use("/api/users", userRouter)
+
+
 
 // #endregion : routers
 

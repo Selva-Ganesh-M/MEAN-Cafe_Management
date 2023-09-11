@@ -1,3 +1,7 @@
+const { JWT_SECRET } = require("../config/ENV");
+const db = require("../config/dbConn");
+const jwt = require("jsonwebtoken")
+
 const signup = (req, res) => {
     if (!req.body) return res.status(400).json({ message: "request must have user details" });
     let user = req.body;

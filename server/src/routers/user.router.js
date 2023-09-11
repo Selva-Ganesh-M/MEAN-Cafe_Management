@@ -8,6 +8,7 @@ const userCtrl = require("../controllers/user.ctrl");
 router.post("/signup", userCtrl.signup)
 
 router.post("/login", userCtrl.login)
+router.post("/forgotPassword", userCtrl.forgotPassword)
 
 // testing routes
 

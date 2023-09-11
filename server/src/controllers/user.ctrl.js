@@ -1,6 +1,8 @@
 const { JWT_SECRET } = require("../config/ENV");
 const db = require("../config/dbConn");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { mailTransporter } = require("../utils/mailerTransporter");
+const ENV = require("../config/ENV");
 
 const signup = (req, res) => {
     if (!req.body) return res.status(400).json({ message: "request must have user details" });
@@ -60,7 +62,41 @@ const login = (req, res) => {
     })
 }
 
+const forgotPassword = (req, res)=>{
+    let user = req.body;
+    if (!user){
+        return res.status(400).json({
+            message: "user details missing."
+        })
+    }
+    const query = "SELECT email, password from user where email=?";
+    db.conn.query(query, [user.email], (err, result)=>{
+        if (!err){
+            if (result.length<=0){
+                return result.status(200).json({message: "Your password is sent to your mail."})
+            }else {
+                let mailOptions = {
+                    from: ENV.MAILER_USER,
+                    to: user.email,
+                    subject: "Password by Cafe management system",
+                    html:`<p>Password: ${result[0].password}</p>`
+                }
+                mailTransporter.sendMail(mailOptions, (err, info)=>{
+                    if (!err){
+                        console.log(`Email sent: ${info.resultponse}`);
+                    }else{
+                        console.log(err.message);
+                    }
+                })
+                return res.status(200).json({message: "Your password is sent to your mail."})
+            }
+        }else {
+            return res.status(500).json(err);
+        }
+    })
+}
+
 let userCtrl = {
-    signup, login
+    signup, login, forgotPassword
 }
 module.exports = userCtrl;

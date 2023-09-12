@@ -11,7 +11,8 @@ router.post("/signup", userCtrl.signup)
 router.post("/login", userCtrl.login)
 router.post("/forgotPassword", userCtrl.forgotPassword)
 router.get("/getAllUsers", authorization, adminCheck, userCtrl.getAllUsers);
-router.patch("/updateStatus", authorization, userCtrl.updateStatus);
+router.patch("/updateStatus", authorization, adminCheck, userCtrl.updateStatus);
+router.patch("/changePassword", authorization, userCtrl.changePassword);
 router.get('checkToken', authorization, userCtrl.checkToken);
 
 

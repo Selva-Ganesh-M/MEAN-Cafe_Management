@@ -139,12 +139,60 @@ let checkToken = (req, res)=>{
     })
 }
 
+let changePassword = (req, res) => {
+    let user = req.body;
+    if(!user){
+        return res.status(400).json({
+            message: "user details is missing in the request body."
+        })
+    }
+    let query = "SELECT * FROM user where email=?"
+    db.conn.query(query, [user.email], (err, response)=>{
+        if (err){
+            return res.status(400).json({
+                message: err.message
+            })
+        }else{
+            let obtUser = response[0];
+            if (obtUser){
+                if (user.oldPassword==obtUser.password){
+                    query = "UPDATE user SET password=? where email=?";
+                    db.conn.query(query, [user.newPassword, res.locals.email], (err, response)=>{
+                        if (err){
+                            res.status(500).json({
+                                message: err.message
+                            })
+                        }else if(response.affectedRows==1){
+                            res.status(200).json({
+                                message: "password updated successfully."
+                            })
+                        }else{
+                            res.status(500).json({
+                                message: "something went wrong."
+                            })
+                        }
+                    })
+                }else{
+                    return res.status(403).json({
+                        message: "password mismatch found."
+                    });
+                }
+            }else{
+                return res.status(400).json({
+                    message: "user doesn't exist."
+                })
+            }
+        }
+    })
+}
+
 let userCtrl = {
     signup,
     login,
     forgotPassword,
     getAllUsers,
     updateStatus,
-    checkToken
+    checkToken,
+    changePassword
 }
 module.exports = userCtrl;

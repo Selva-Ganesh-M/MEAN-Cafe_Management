@@ -1,6 +1,9 @@
 function adminCheck(req, res, next){
-    if (req.locals.role!="admin"){
+    if (res.locals.role!="admin"){
         return res.sendStatus(401);
+    }else{
+        next();
     }
-    next();
 }
+
+module.exports = adminCheck;

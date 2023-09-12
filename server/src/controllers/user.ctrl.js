@@ -35,7 +35,7 @@ const login = (req, res) => {
     let user = req.body;
     let query = "select * from user where email=?"
     db.conn.query(query, [user.email], (err, response) => {
-        console.log(response);
+        console.log(response[0]);
         if (!err) {
             if (!response[0]) {
                 return res.status(400).json({
@@ -100,12 +100,12 @@ let getAllUsers = (req, res) => {
     const query = "SELECT * FROM user where role='user'"
     db.conn.query(query, [], (err, results) => {
         if (!err) {
-            res.status(200).json({
+            return res.status(200).json({
                 message: "got all users",
                 payload: results
             })
         } else {
-            res.status(500).json({
+            return res.status(500).json({
                 message: err.message
             })
         }

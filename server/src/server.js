@@ -3,6 +3,7 @@ const ENV = require("./config/ENV");
 const db = require("./config/dbConn");
 const cors = require("cors");
 const userRouter = require("./routers/user.router");
+const categoryRouter = require("./routers/category.router");
 
 const server = express()
 
@@ -15,7 +16,8 @@ server.use((req, res, next)=>{
     console.log(`${req.method} ${req.path}`);
     next()
 })
-server.use("/api/users", userRouter)
+server.use("/api/users", userRouter);
+server.use("/api/category", categoryRouter);
 
 
 

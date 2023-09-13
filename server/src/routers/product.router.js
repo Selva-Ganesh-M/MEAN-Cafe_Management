@@ -16,5 +16,7 @@ router.get("/getById/:id", authorization, productCtrl.getById);
 
 router.patch("/update/:id", authorization, adminCheck, productCtrl.update);
 
+router.delete("/deleteProduct/:id", authorization, adminCheck, productCtrl.deleteProduct);
+
 let productRouter = router;
 module.exports = productRouter

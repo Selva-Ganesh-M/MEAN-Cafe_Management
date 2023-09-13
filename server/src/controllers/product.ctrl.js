@@ -29,8 +29,23 @@ const getAllProducts = (req, res)=>{
     })
 }
 
+const getByCategory = (req, res)=>{
+    let query = "SELECT * from product as p where p.categoryId = ?"
+    db.conn.query(query, [req.params.categoryId], (err, response)=>{
+        if (err){
+            return res.status(500).json(err);
+        }else {
+            return res.status(200).json({
+                message: "get prod by cat success",
+                payload: response
+            })
+        }
+    })
+}
+
 let productCtrl = {
     createProduct,
-    getAllProducts
+    getAllProducts,
+    getByCategory
 }
 module.exports = productCtrl

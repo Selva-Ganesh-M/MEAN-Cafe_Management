@@ -10,5 +10,7 @@ router.post("/add", authorization, adminCheck, productCtrl.createProduct)
 
 router.get("/getAll", authorization, productCtrl.getAllProducts)
 
+router.get("/getByCat/:categoryId", authorization, productCtrl.getByCategory)
+
 let productRouter = router;
 module.exports = productRouter

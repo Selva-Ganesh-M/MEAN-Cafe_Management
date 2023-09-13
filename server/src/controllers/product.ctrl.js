@@ -30,7 +30,7 @@ const getAllProducts = (req, res)=>{
 }
 
 const getByCategory = (req, res)=>{
-    let query = "SELECT * from product as p where p.categoryId = ?"
+    let query = "SELECT id, name from product as p where p.categoryId = ? and status='true'"
     db.conn.query(query, [req.params.categoryId], (err, response)=>{
         if (err){
             return res.status(500).json(err);
@@ -43,9 +43,45 @@ const getByCategory = (req, res)=>{
     })
 }
 
+const getById = (req, res)=>{
+    let query = "SELECT id, name, price, description from product as p where p.id=?"
+    db.conn.query(query, [req.params.id], (err, response)=>{
+        if (err){
+            return res.status(500).json(err);
+        }else {
+            return res.status(200).json({
+                message: "get prod by id success",
+                payload: response[0]
+            })
+        }
+    })
+}
+
+const update = (req, res)=>{
+    let newProduct = req.body;
+    let query = "UPDATE product SET name=?, categoryId=?, description=?, price=? where id=?"
+    db.conn.query(query, [newProduct.name, newProduct.categoryId, newProduct.description, newProduct.price, req.params.id], (err, response)=>{
+        if (err){
+            return res.status(500).json(err);
+        }else{
+            if(response.affectedRows<=0){
+                return res.status(400).json({
+                    message: "product not found."
+                })
+            }else{
+                return res.status(200).json({
+                    message: "product updated successfully."
+                })
+            }
+        }
+    });
+}
+
 let productCtrl = {
     createProduct,
     getAllProducts,
-    getByCategory
+    getByCategory,
+    getById,
+    update
 }
 module.exports = productCtrl

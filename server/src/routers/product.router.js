@@ -12,5 +12,9 @@ router.get("/getAll", authorization, productCtrl.getAllProducts)
 
 router.get("/getByCat/:categoryId", authorization, productCtrl.getByCategory)
 
+router.get("/getById/:id", authorization, productCtrl.getById);
+
+router.patch("/update/:id", authorization, adminCheck, productCtrl.update);
+
 let productRouter = router;
 module.exports = productRouter

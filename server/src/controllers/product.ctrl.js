@@ -96,12 +96,34 @@ const deleteProduct = (req, res)=>{
     });
 }
 
+const updateStatus =(req, res)=>{
+    let product = req.body;
+    let query = "UPDATE product SET status=? where id=?"
+    db.conn.query(query, [product.status, product.id], (err, response)=>{
+        if (err){
+            return res.status(500).json(err)
+        }else{
+            if (response.affectedRows<=0){
+                return res.status(400).json({
+                    message: "product not found."
+                })
+            }else{
+                return res.status(200).json({
+                    message: "status updated successfully."
+                })
+            }
+        }
+    })
+}
+
 let productCtrl = {
     createProduct,
     getAllProducts,
     getByCategory,
     getById,
     update,
-    deleteProduct
+    deleteProduct,
+    updateStatus
 }
-module.exports = productCtrl
+
+module.exports = productCtrl;

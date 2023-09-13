@@ -18,5 +18,7 @@ router.patch("/update/:id", authorization, adminCheck, productCtrl.update);
 
 router.delete("/deleteProduct/:id", authorization, adminCheck, productCtrl.deleteProduct);
 
+router.patch("/updateStatus", authorization, adminCheck, productCtrl.updateStatus)
+
 let productRouter = router;
 module.exports = productRouter

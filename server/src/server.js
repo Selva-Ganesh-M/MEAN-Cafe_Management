@@ -6,6 +6,7 @@ const userRouter = require("./routers/user.router");
 const categoryRouter = require("./routers/category.router");
 const productRouter = require("./routers/product.router");
 const billRouter = require("./routers/bill.router");
+const dashboardRouter = require("./routers/dashboard.router");
 
 const server = express()
 
@@ -22,6 +23,7 @@ server.use("/api/users", userRouter);
 server.use("/api/category", categoryRouter);
 server.use("/api/product", productRouter);
 server.use("/api/bill", billRouter);
+server.use("/api/dashboard", dashboardRouter);
 
 
 

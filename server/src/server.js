@@ -5,6 +5,7 @@ const cors = require("cors");
 const userRouter = require("./routers/user.router");
 const categoryRouter = require("./routers/category.router");
 const productRouter = require("./routers/product.router");
+const billRouter = require("./routers/bill.router");
 
 const server = express()
 
@@ -20,6 +21,7 @@ server.use((req, res, next)=>{
 server.use("/api/users", userRouter);
 server.use("/api/category", categoryRouter);
 server.use("/api/product", productRouter);
+server.use("/api/bill", billRouter);
 
 
 

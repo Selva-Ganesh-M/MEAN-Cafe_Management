@@ -102,9 +102,58 @@ const getBill = (req, res) => {
     }
 }
 
+const getAll = (req, res) => {
+    let query = "select * from bill order by id desc";
+    db.conn.query(
+        query,
+        [],
+        (err, results)=>{
+            if (err){
+                return res.status(500).json(err);
+            }else{
+                return res.status(200).json({
+                    message: "get all bills success.",
+                    payload: results
+                })
+            }
+        }
+    )
+}
+
+const deleteOne = (req, res) => {
+    let bill = req.body; //{id, uuid}
+    let query = "DELETE FROM bill where id=?"
+    db.conn.query(
+        query,
+        [bill.id],
+        (err, result) => {
+            if (err){
+                return res.status(500).json(err)
+            }else{
+                if (result.affectedRows<=0){
+                    return res.status(400).json({
+                        message: "bill not found."
+                    })
+                }else{
+                    try{
+                        fs.unlinkSync(path.join(__dirname, `../generated_pdf/${bill.uuid}.pdf`))
+                    }catch(error){
+                        console.log(error.message);
+                    }
+                    return res.status(200).json({
+                        message: "bill deleted successfully."
+                    })
+                }
+            }
+        }
+    )
+}
+
 const billCtrl = {
     generateDetails,
-    getBill
+    getBill,
+    getAll,
+    deleteOne
 }
 
 module.exports = billCtrl;

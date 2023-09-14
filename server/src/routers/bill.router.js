@@ -9,6 +9,10 @@ router.post("/generateDetails", authorization, adminCheck, billCtrl.generateDeta
 
 router.post("/getBill", authorization, adminCheck, billCtrl.getBill);
 
+router.get("/getAll", authorization, adminCheck, billCtrl.getAll)
+
+router.delete("/deleteOne", authorization, adminCheck, billCtrl.deleteOne);
+
 let billRouter = router;
 
 module.exports = billRouter;

@@ -57,10 +57,54 @@ const generateDetails = (req, res)=>{
     })
 }
 
-
+const getBill = (req, res) => {
+    const orderDetails = req.body;
+    const pdfPath = path.join( __dirname, `../generated_pdf/${orderDetails.uuid}.pdf`);
+    if (fs.existsSync(pdfPath)){
+        res.contentType("application/pdf");
+        fs.createReadStream(pdfPath).pipe(res);
+    }else{
+        console.log(`file not there.`);
+        let generatedUuid = uuid.v1();
+        let productDetailsReport = JSON.parse(orderDetails.productDetails);
+        ejs.renderFile(
+            path.join(__dirname, "..", "templates", "report.ejs"),
+            {
+            productDetails: productDetailsReport,
+            name: orderDetails.name,
+            email: orderDetails.email,
+            contactNumber: orderDetails.contactNumber,
+            paymentMethod: orderDetails.paymentMethod,
+            totalAmount: orderDetails.totalAmount
+            },
+            (err, result)=>{
+                if (err){
+                    console.log(`err here.`);
+                    console.log(err.message);
+                    return res.status(500).json(err);
+                }else{
+                    console.log(`else`);
+                    pdf.create(result).toFile(
+                        path.join( __dirname, `../generated_pdf/${generatedUuid}.pdf` ),
+                        (err, data)=>{
+                            if (err) {
+                                console.log(err);
+                                return res.status(500).json(err);
+                            }else{
+                                res.contentType("application/pdf");
+                                fs.createReadStream(path.join( __dirname, `../generated_pdf/${generatedUuid}.pdf` )).pipe(res);
+                            }
+                        }
+                    )
+                }
+            }
+        )
+    }
+}
 
 const billCtrl = {
-    generateDetails
+    generateDetails,
+    getBill
 }
 
 module.exports = billCtrl;

@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.post("/generateDetails", authorization, adminCheck, billCtrl.generateDetails);
 
+router.post("/getBill", authorization, adminCheck, billCtrl.getBill);
+
 let billRouter = router;
 
 module.exports = billRouter;
